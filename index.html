@@ -1,0 +1,1474 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>共生之境 - 人与自然的和谐乐章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2E7D32', // 深绿色 - 代表森林和生命力
+                        secondary: '#1976D2', // 蓝色 - 代表海洋和天空
+                        accent: '#8D6E63', // 棕色 - 代表土地
+                        light: '#E8F5E9', // 浅绿色背景
+                        dark: '#1B5E20', // 更深的绿色
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            }
+            .backdrop-blur {
+                backdrop-filter: blur(8px);
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .parallax {
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 全局动画定义 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes float-delay {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse-soft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-2deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite infinite;
+        }
+        
+        .animate-float-delay {
+            animation: float-delay 6s ease-in-out 1s infinite;
+        }
+        
+        .animate-pulse-soft {
+            animation: pulse-soft 4s ease-in-out infinite;
+        }
+        
+        .animate-sway {
+            animation: sway 8s ease-in-out infinite;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        /* 页面过渡 */
+        .page {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .page.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 进度条 */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background-color: #2E7D32;
+            width: 0%;
+            z-index: 100;
+            transition: width 0.2s ease;
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 场景元素样式 */
+        .scene-element {
+            opacity: 0;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .scene-element.visible {
+            opacity: 1;
+        }
+        
+        /* 互动元素 */
+        .interactive {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .interactive:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 生态系统切换按钮 */
+        .eco-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .eco-btn.active {
+            background-color: #2E7D32;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* 加载动画 */
+        .loader {
+            border-top-color: #2E7D32;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            /* 生态系统展示区高度调整 */
+            .eco-system .relative {
+                height: 350px !important;
+            }
+            
+            /* 对比展示图片高度调整 */
+            #impact .grid md\:grid-cols-2 .relative img {
+                height: 50vw !important;
+            }
+            
+            /* 行动选择项调整 */
+            .action-option {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .action-option input {
+                margin-bottom: 0.5rem;
+            }
+            
+            .action-option span {
+                margin-left: 0 !important;
+            }
+            
+            /* 减少段落间距 */
+            p {
+                line-height: 1.5 !important;
+            }
+            
+            /* 候鸟迁徙时间线调整 */
+            .relative.pl-8 {
+                padding-left: 4rem !important;
+            }
+            
+            .absolute.-left-10 {
+                left: -1.5rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 按钮大小调整 */
+            .eco-btn, .inline-block.bg-primary, .action-option {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* 生态系统切换按钮布局 */
+            .flex.flex-wrap.justify-center.gap-4 {
+                gap: 0.5rem !important;
+            }
+            
+            /* 互动元素大小调整 */
+            .interactive img {
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+            }
+            
+            /* 标题大小限制 */
+            h1 {
+                line-height: 1.2 !important;
+            }
+            
+            h2 {
+                font-size: 1.8rem !important;
+            }
+            
+            h3 {
+                font-size: 1.3rem !important;
+            }
+            
+            /* 页脚布局调整 */
+            footer .grid {
+                gap: 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800 overflow-x-hidden">
+    <!-- 进度条 -->
+    <div id="progress-bar"></div>
+    
+    <!-- 加载屏幕 -->
+    <div id="loader-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white">
+        <div class="loader w-16 h-16 border-4 border-gray-200 rounded-full mb-6"></div>
+        <p class="text-primary font-medium">正在进入自然的世界...</p>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#hero" class="text-white font-display font-bold text-xl flex items-center">
+                <i class="fa fa-leaf mr-2 animate-pulse-soft"></i>
+                <span>共生之境</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#gift" class="text-white hover:text-light transition-colors">自然的馈赠</a>
+                <a href="#impact" class="text-white hover:text-light transition-colors">人类的影响</a>
+                <a href="#solutions" class="text-white hover:text-light transition-colors">共生的答案</a>
+                <a href="#action" class="text-white hover:text-light transition-colors">你的行动</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden text-white text-xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#gift" class="text-primary hover:text-dark py-2 transition-colors">自然的馈赠</a>
+                <a href="#impact" class="text-primary hover:text-dark py-2 transition-colors">人类的影响</a>
+                <a href="#solutions" class="text-primary hover:text-dark py-2 transition-colors">共生的答案</a>
+                <a href="#action" class="text-primary hover:text-dark py-2 transition-colors">你的行动</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 - 使用高清生态背景并实现标题浮动效果 -->
+    <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- 替换为高清生态背景图片 -->
+            <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/460bdd4019064cb8b69ff9bdf763b2cf~tplv-a9rns2rl98-image.image?rcl=20250801194519AD6906F19ECDAA550966&amp;rk3s=8e244e95&amp;rrcfp=2609e108&amp;x-expires=1754653524&amp;x-signature=bEu851Qeqlu03bR%2FukdpMArM%2Bbo%3D" alt="自然生态背景" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        <div class="container mx-auto px-4 z-10 text-center">
+            <!-- 为"人与自然和谐共生"添加浮动动画 -->
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-display font-bold text-white text-shadow-lg mb-6 animate-float animate-fade-in" style="animation-delay: 0.3s">
+                人与自然<br>和谐共生
+            </h1>
+            <p class="text-[clamp(1rem,2vw,1.25rem)] text-white text-shadow max-w-md mx-auto mb-10 animate-float-delay animate-fade-in" style="animation-delay: 0.6s">探索我们与自然的紧密联系，发现平衡之道，共同守护这个蓝色星球</p>
+            <a href="#gift" class="inline-block bg-primary hover:bg-dark text-white font-medium py-3 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl animate-fade-in animate-bounce" style="animation-delay: 0.9s">
+                开始探索 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+        <div class="absolute bottom-10 left-0 right-0 text-center z-10">
+            <a href="#gift" class="text-white animate-bounce inline-block">
+                <i class="fa fa-angle-double-down text-3xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 自然的馈赠 -->
+    <section id="gift" class="py-16 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-light to-white z-0"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-12 page">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-display font-bold text-primary mb-4">自然的馈赠</h2>
+                <p class="text-gray-600 max-w-md mx-auto text-base">地球上的每一个生态系统都是生命的奇迹，它们相互依存，维持着精妙的平衡</p>
+            </div>
+            
+            <!-- 生态系统切换 - 移动端优化为滚动条式 -->
+            <div class="flex overflow-x-auto pb-4 mb-8 page scrollbar-hide">
+                <div class="flex space-x-2 mx-auto">
+                    <button class="eco-btn active px-4 py-2 rounded-full border-2 border-primary text-primary font-medium whitespace-nowrap" data-eco="forest">
+                        <i class="fa fa-tree mr-2"></i>森林
+                    </button>
+                    <button class="eco-btn px-4 py-2 rounded-full border-2 border-primary text-primary font-medium whitespace-nowrap" data-eco="ocean">
+                        <i class="fa fa-tint mr-2"></i>海洋
+                    </button>
+                    <button class="eco-btn px-4 py-2 rounded-full border-2 border-primary text-primary font-medium whitespace-nowrap" data-eco="wetland">
+                        <i class="fa fa-leaf mr-2"></i>湿地
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 生态系统展示区 -->
+            <div class="eco-system active" id="forest-eco">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl mb-8 h-[350px] md:h-[600px] page">
+                    <img src="https://p3-search.byteimg.com/obj/labis/30ed15f1c75402446095e6075141a8e3" alt="热带雨林景观" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    
+                    <!-- 互动元素 - 位置响应式调整 -->
+                    <div class="absolute top-[25%] left-[15%] interactive" data-info="butterfly">
+                        <img src="https://p3-search.byteimg.com/obj/labis/ccf3236c02200c6d7b5e6aad88a571d4" alt="蝴蝶" class="w-10 h-10 md:w-12 md:h-12 object-contain animate-float">
+                    </div>
+                    
+                    <div class="absolute top-[35%] right-[20%] interactive" data-info="flower">
+                        <img src="https://p3-search.byteimg.com/obj/labis/f9515816bb8f66250ca89874576efe54" alt="花朵" class="w-12 h-12 md:w-16 md:h-16 object-contain animate-sway">
+                    </div>
+                    
+                    <div class="absolute bottom-[20%] left-[25%] interactive" data-info="monkey">
+                        <img src="https://p3-search.byteimg.com/obj/labis/917ee9d3ec1f4ac54605ad1c27c831fd" alt="猴子" class="w-12 h-12 md:w-16 md:h-16 object-contain">
+                    </div>
+                    
+                    <div class="absolute bottom-4 left-4 right-4 text-white p-2">
+                        <h3 class="text-xl md:text-2xl font-bold mb-1">热带雨林：生命的宝库</h3>
+                        <p class="text-white/90 text-sm">仅占地球表面积的6%，却孕育了超过一半的陆地物种</p>
+                    </div>
+                </div>
+                
+                <!-- 生态信息卡片 - 移动端堆叠布局 -->
+                <div class="grid md:grid-cols-2 gap-6 page">
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-sitemap text-xl text-primary"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">共生关系</h3>
+                        <p class="text-gray-600 text-sm">在热带雨林中，蝴蝶为花朵传粉，花朵则为蝴蝶提供花蜜，形成了完美的共生关系。这种相互依存的网络支撑着整个生态系统的平衡。</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-heartbeat text-xl text-primary"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">地球之肺</h3>
+                        <p class="text-gray-600 text-sm">热带雨林通过光合作用吸收二氧化碳，释放氧气，帮助调节全球气候。据联合国环境规划署数据，亚马逊雨林每年吸收约20亿吨二氧化碳。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="eco-system hidden" id="ocean-eco">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl mb-8 h-[350px] md:h-[600px]">
+                    <img src="https://p3-search.byteimg.com/obj/labis/cd4ac3576c317b9789aa3f368a692420" alt="海洋景观" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    
+                    <!-- 互动元素 -->
+                    <div class="absolute top-[20%] right-[25%] interactive" data-info="coral">
+                        <img src="https://p3-search.byteimg.com/obj/labis/d4f04100eab562e76ecda557dfd16c3e" alt="珊瑚" class="w-14 h-14 md:w-20 md:h-20 object-contain animate-float">
+                    </div>
+                    
+                    <div class="absolute bottom-[25%] left-[15%] interactive" data-info="fish">
+                        <img src="https://p3-search.byteimg.com/obj/labis/a8a51fea9adf21a8a38e72eb5da7e8e5" alt="鱼类" class="w-12 h-12 md:w-16 md:h-16 object-contain">
+                    </div>
+                    
+                    <div class="absolute bottom-4 left-4 right-4 text-white p-2">
+                        <h3 class="text-xl md:text-2xl font-bold mb-1">海洋：生命的摇篮</h3>
+                        <p class="text-white/90 text-sm">覆盖地球表面71%的海洋，孕育了地球上最早的生命形式</p>
+                    </div>
+                </div>
+                
+                <!-- 生态信息卡片 -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-life-ring text-xl text-secondary"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">蓝色碳汇</h3>
+                        <p class="text-gray-600 text-sm">海洋植物，特别是红树林、盐沼和海草，吸收二氧化碳的效率是热带雨林的5倍以上。它们储存了全球约55%的海洋碳。</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-sitemap text-xl text-secondary"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">珊瑚礁生态系统</h3>
+                        <p class="text-gray-600 text-sm">珊瑚礁仅占海洋面积的0.1%，却支持着全球25%的海洋生物多样性。它们同时保护海岸线免受侵蚀，并为数百万人提供食物和收入。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="eco-system hidden" id="wetland-eco">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl mb-8 h-[350px] md:h-[600px]">
+                    <img src="https://p3-search.byteimg.com/obj/labis/8f6c76f31a04be787be5a5dcebd83e25" alt="湿地景观" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    
+                    <!-- 互动元素 -->
+                    <div class="absolute top-[30%] left-[20%] interactive" data-info="bird">
+                        <img src="https://p3-search.byteimg.com/obj/labis/220e3a3cc14adcd4fc35c130d79088c5" alt="水鸟" class="w-12 h-12 md:w-16 md:h-16 object-contain animate-float">
+                    </div>
+                    
+                    <div class="absolute bottom-[30%] right-[15%] interactive" data-info="plant">
+                        <img src="https://p3-search.byteimg.com/obj/labis/a30542e0eaf8c6017a8c9362ca2020a5" alt="湿地植物" class="w-14 h-14 md:w-20 md:h-20 object-contain animate-sway">
+                    </div>
+                    
+                    <div class="absolute bottom-4 left-4 right-4 text-white p-2">
+                        <h3 class="text-xl md:text-2xl font-bold mb-1">湿地：地球之肾</h3>
+                        <p class="text-white/90 text-sm">被誉为"地球之肾"，湿地在净化水质、调蓄洪水方面发挥着关键作用</p>
+                    </div>
+                </div>
+                
+                <!-- 生态信息卡片 -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-filter text-xl text-accent"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">自然净化器</h3>
+                        <p class="text-gray-600 text-sm">湿地能够过滤和净化水中的污染物，每公顷湿地可净化约100万升水。它们就像地球的肾脏，维持着水循环的健康。</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-5 transform transition-all hover:-translate-y-2">
+                        <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa fa-refresh text-xl text-accent"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">生物多样性热点</h3>
+                        <p class="text-gray-600 text-sm">湿地是世界上生物多样性最丰富的生态系统之一，支持着40%的全球物种。它们也是候鸟迁徙的重要停歇地和繁殖场所。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 生态知识弹窗 - 响应式大小调整 -->
+            <div id="info-modal" class="fixed inset-0 bg-black/50 backdrop-blur z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity 0.3s">
+                <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform 0.3s">
+                    <div class="relative">
+                        <img id="modal-image" src="" alt="" class="w-full h-40 object-cover">
+                        <button id="close-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-gray-800 hover:bg-white transition-colors">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <h3 id="modal-title" class="text-lg font-bold mb-2 text-gray-800"></h3>
+                        <p id="modal-content" class="text-gray-600 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 人类的影响 -->
+    <section id="impact" class="py-16 bg-gray-50 relative">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 page">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-display font-bold text-primary mb-4">人类的影响</h2>
+                <p class="text-gray-600 max-w-md mx-auto text-base">我们的行为正在改变着这个星球，了解影响才能找到平衡之道</p>
+            </div>
+            
+            <!-- 对比展示 - 移动端堆叠布局 -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12 page">
+                <div class="relative rounded-xl overflow-hidden shadow-xl group">
+                    <img src="https://p3-search.byteimg.com/obj/labis/d5d765789458411a40f752b2ecebcad4" alt="健康的自然环境" class="w-full h-56 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+                        <h3 class="text-xl font-bold mb-1">曾经的和谐</h3>
+                        <p>丰富的生物多样性，平衡的生态系统</p>
+                    </div>
+                </div>
+                
+                <div class="relative rounded-xl overflow-hidden shadow-xl group">
+                    <img src="https://p3-search.byteimg.com/obj/labis/e1d424ac23967ea7a9fb265a02c7c3d3" alt="受破坏的自然环境" class="w-full h-56 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+                        <h3 class="text-xl font-bold mb-1">失衡的现状</h3>
+                        <p>栖息地破坏，物种减少，气候异常</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 数据可视化 - 高度响应式调整 -->
+            <div class="bg-white rounded-xl shadow-lg p-5 mb-12 page">
+                <h3 class="text-lg font-bold mb-4 text-center">全球生态变化趋势</h3>
+                <div class="h-64 md:h-80">
+                    <canvas id="eco-chart"></canvas>
+                </div>
+                <p class="text-xs text-gray-500 text-center mt-3">数据来源：联合国环境规划署 (2023)</p>
+            </div>
+            
+            <!-- 沙漠变绿洲互动 - 尺寸适配 -->
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden page">
+                <div class="p-5">
+                    <h3 class="text-xl font-bold mb-3 text-center">沙漠变绿洲</h3>
+                    <p class="text-gray-600 text-center mb-6 max-w-md mx-auto text-sm">拖动树苗到沙漠中，见证植被如何改变环境</p>
+                    
+                    <div id="desert-container" class="relative w-full h-56 md:h-80 bg-yellow-200 rounded-lg overflow-hidden mb-5 border-2 border-yellow-300">
+                        <!-- 沙漠背景 -->
+                        <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1061/1200/800')] bg-cover bg-center opacity-70"></div>
+                        
+                        <!-- 可拖动的树苗 -->
+                        <div id="sapling" class="absolute w-10 h-14 cursor-move left-1/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/2c9942b2041c4ca58305c9879eeff51e~tplv-a9rns2rl98-image.image?rcl=20250801184814720E2F6FCF4EADAF02F8&amp;rk3s=8e244e95&amp;rrcfp=2609e108&amp;x-expires=1754650098&amp;x-signature=3QVFB8eqzuw2NjPnODz2IVa9jIw%3D" alt="树苗" class="w-full h-full object-contain">
+                        </div>
+                        
+                        <!-- 种植区域标记 -->
+                        <div class="plant-zone absolute w-1/3 h-1/3 border-2 dashed border-green-500 rounded-lg opacity-70" style="left: 10%; top: 20%"></div>
+                        <div class="plant-zone absolute w-1/3 h-1/3 border-2 dashed border-green-500 rounded-lg opacity-70" style="right: 10%; top: 30%"></div>
+                        <div class="plant-zone absolute w-1/3 h-1/3 border-2 dashed border-green-500 rounded-lg opacity-70" style="left: 35%; bottom: 15%"></div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p id="desert-message" class="text-gray-600 text-sm">请将树苗拖到虚线区域进行种植</p>
+                        <div id="oasis-progress" class="w-full bg-gray-200 rounded-full h-2 mt-3 hidden">
+                            <div id="oasis-bar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 共生的答案 -->
+    <section id="solutions" class="py-16 bg-white relative">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 page">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-display font-bold text-primary mb-4">共生的答案</h2>
+                <p class="text-gray-600 max-w-md mx-auto text-base">从破坏到修复，人类正在寻找与自然和谐共处的道路</p>
+            </div>
+            
+            <!-- 成功案例 - 移动端堆叠布局 -->
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-light rounded-xl shadow-lg overflow-hidden transform transition-all hover:-translate-y-2 page">
+                    <img src="https://p3-search.byteimg.com/obj/labis/5e904ebc95b275bc754ec96974dc7650" alt="塞罕坝林场" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <span class="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded-full mb-3">中国 · 塞罕坝</span>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">从荒漠到林海的蜕变</h3>
+                        <p class="text-gray-600 text-sm mb-3">
+                            上世纪60年代，塞罕坝还是一片荒漠。经过三代人的努力，这里建成了115.1万亩的世界上面积最大的人工林海，森林覆盖率从11.4%提高到82%。
+                        </p>
+                        <div class="flex items-center text-xs text-gray-500 flex-wrap gap-4">
+                            <div class="flex items-center">
+                                <i class="fa fa-tree text-primary mr-1"></i>
+                                <span>植树超4.8亿棵</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa fa-thermometer-half text-primary mr-1"></i>
+                                <span>年固碳86.03万吨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-light rounded-xl shadow-lg overflow-hidden transform transition-all hover:-translate-y-2 page">
+                    <img src="https://p3-search.byteimg.com/obj/labis/f7e1fbd4968617297abdc9b897882db8" alt="浙江余村" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <span class="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded-full mb-3">中国 · 余村</span>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">"绿水青山就是金山银山"</h3>
+                        <p class="text-gray-600 text-sm mb-3">
+                            余村曾因开矿采石导致生态破坏。2005年起，余村关闭矿山，发展生态旅游，实现了从"卖石头"到"卖风景"的转变，村民收入增长近10倍。
+                        </p>
+                        <div class="flex items-center text-xs text-gray-500 flex-wrap gap-4">
+                            <div class="flex items-center">
+                                <i class="fa fa-line-chart text-primary mr-1"></i>
+                                <span>年收入超3.5亿元</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa fa-users text-primary mr-1"></i>
+                                <span>带动500余人就业</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 森林守护模拟游戏 - 响应式调整 -->
+            <div class="bg-white rounded-xl shadow-xl p-5 mb-8 page">
+                <h3 class="text-xl font-bold mb-5 text-center">森林守护模拟</h3>
+                <p class="text-gray-600 text-center mb-6 max-w-md mx-auto text-sm">选择不同的管理方式，查看10年后森林的变化</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="interactive bg-light rounded-lg p-5 border-2 border-transparent hover:border-primary">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fa fa-ban text-xl text-primary"></i>
+                        </div>
+                        <h4 class="text-center font-bold mb-2 text-sm">严格禁伐</h4>
+                        <p class="text-gray-600 text-xs text-center">全面禁止砍伐，保护现有森林生态系统</p>
+                    </div>
+                    
+                    <div class="interactive bg-light rounded-lg p-5 border-2 border-transparent hover:border-primary">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fa fa-plus-circle text-xl text-primary"></i>
+                        </div>
+                        <h4 class="text-center font-bold mb-2 text-sm">积极种植</h4>
+                        <p class="text-gray-600 text-xs text-center">有计划地砍伐与种植，保持森林更新</p>
+                    </div>
+                    
+                    <div class="interactive bg-light rounded-lg p-5 border-2 border-transparent hover:border-primary">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fa fa-globe text-xl text-primary"></i>
+                        </div>
+                        <h4 class="text-center font-bold mb-2 text-sm">生态旅游</h4>
+                        <p class="text-gray-600 text-xs text-center">适度开发旅游项目，增加保护资金</p>
+                    </div>
+                </div>
+                
+                <!-- 结果展示区 - 移动端堆叠布局 -->
+                <div id="simulation-result" class="hidden">
+                    <div class="border-2 border-gray-200 rounded-xl overflow-hidden">
+                        <div class="grid md:grid-cols-2">
+                            <div>
+                                <img id="result-image" src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/de89b8576ec64226b540df9782f3b6e7~tplv-a9rns2rl98-image.image?rcl=20250801190550E6B09AF717200E230AFF&amp;rk3s=8e244e95&amp;rrcfp=2609e108&amp;x-expires=1754651153&amp;x-signature=26PbrPRCe989BtkMcqKeyFsMfO8%3D" alt="森林变化结果" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-5">
+                                <h4 id="result-title" class="text-lg font-bold mb-2"></h4>
+                                <p id="result-description" class="text-gray-600 text-sm mb-3"></p>
+                                <div class="grid grid-cols-3 gap-3 text-center">
+                                    <div class="bg-light p-2 rounded-lg">
+                                        <div id="result-biodiversity" class="font-bold text-primary text-sm"></div>
+                                        <div class="text-xs text-gray-500">生物多样性</div>
+                                    </div>
+                                    <div class="bg-light p-2 rounded-lg">
+                                        <div id="result-carbon" class="font-bold text-primary text-sm"></div>
+                                        <div class="text-xs text-gray-500">固碳量</div>
+                                    </div>
+                                    <div class="bg-light p-2 rounded-lg">
+                                        <div id="result-economy" class="font-bold text-primary text-sm"></div>
+                                        <div class="text-xs text-gray-500">经济效益</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 候鸟迁徙故事 - 响应式时间线 -->
+            <div class="bg-primary/5 rounded-2xl p-5 page">
+                <h3 class="text-xl font-bold mb-5 text-center">一只候鸟的迁徙日记</h3>
+                
+                <div class="relative pl-8 md:pl-12 border-l-2 border-primary/30 max-w-3xl mx-auto">
+                    <div class="mb-8 relative">
+                        <div class="absolute -left-10 top-0 w-5 h-5 rounded-full bg-primary"></div>
+                        <h4 class="text-base font-bold mb-2">启程 · 北方的秋天</h4>
+                        <p class="text-gray-600 text-sm">
+                            "天气转凉，我和同伴们开始了南迁的旅程。今年的出发比往年早了些，因为北方的秋天似乎来得更早了。飞过熟悉的森林，我发现今年的树木比去年更少了些。"
+                        </p>
+                    </div>
+                    
+                    <div class="mb-8 relative">
+                        <div class="absolute -left-10 top-0 w-5 h-5 rounded-full bg-primary"></div>
+                        <h4 class="text-base font-bold mb-2">途中 · 遭遇困境</h4>
+                        <p class="text-gray-600 text-sm">
+                            "飞过一片曾经的湿地，如今却变成了农田。我们找不到足够的食物和水源，许多年幼的同伴掉队了。更令人担忧的是，城市的灯光让我们迷失了方向。"
+                        </p>
+                    </div>
+                    
+                    <div class="mb-8 relative">
+                        <div class="absolute -left-10 top-0 w-5 h-5 rounded-full bg-primary"></div>
+                        <h4 class="text-base font-bold mb-2">希望 · 保护站的灯光</h4>
+                        <p class="text-gray-600 text-sm">
+                            "就在我们精疲力尽时，发现了一处候鸟保护站。那里有干净的水源和充足的食物，志愿者们还为我们搭建了安全的栖息之所。这让我想起了小时候迁徙的日子。"
+                        </p>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="absolute -left-10 top-0 w-5 h-5 rounded-full bg-primary"></div>
+                        <h4 class="text-base font-bold mb-2">到达 · 南方的湿地</h4>
+                        <p class="text-gray-600 text-sm">
+                            "终于抵达了越冬地。幸运的是，这片湿地得到了很好的保护，我们可以安心度过这个冬天。我期待着明年春天，带着新的家庭成员，再次踏上北归的旅程。"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 你的行动 -->
+    <section id="action" class="py-16 bg-gradient-to-b from-primary/5 to-white relative">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 page">
+                <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-display font-bold text-primary mb-4">每个人的行动</h2>
+                <p class="text-gray-600 max-w-md mx-auto text-base">保护自然不需要惊天动地，从小事做起，每个人都能贡献力量</p>
+            </div>
+            
+            <!-- 行动选择 - 移动端布局优化 -->
+            <div class="bg-white rounded-xl shadow-xl p-5 mb-12 page">
+                <h3 class="text-lg font-bold mb-5 text-center">选择你的环保行动</h3>
+                
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="低碳出行">
+                        <span class="ml-2 text-sm">低碳出行</span>
+                    </label>
+                    
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="减少塑料">
+                        <span class="ml-2 text-sm">减少塑料</span>
+                    </label>
+                    
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="节约用水">
+                        <span class="ml-2 text-sm">节约用水</span>
+                    </label>
+                    
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="垃圾分类">
+                        <span class="ml-2 text-sm">垃圾分类</span>
+                    </label>
+                    
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="植树绿化">
+                        <span class="ml-2 text-sm">植树绿化</span>
+                    </label>
+                    
+                    <label class="action-option flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                        <input type="checkbox" class="w-4 h-4 text-primary focus:ring-primary rounded" value="绿色消费">
+                        <span class="ml-2 text-sm">绿色消费</span>
+                    </label>
+                </div>
+                
+                <div class="text-center">
+                    <button id="generate-contract" class="bg-primary hover:bg-dark text-white font-medium py-2 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm">
+                        生成我的自然守护契约
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 守护契约 - 响应式调整 -->
+            <div id="contract" class="hidden bg-white rounded-xl shadow-2xl overflow-hidden max-w-3xl mx-auto page">
+                <div class="bg-primary text-white p-5 text-center">
+                    <h3 class="text-xl font-bold mb-1">自然守护契约</h3>
+                    <p class="opacity-90 text-sm">我承诺为保护自然贡献自己的力量</p>
+                </div>
+                
+                <div class="p-5">
+                    <div class="text-center mb-5">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-handshake-o text-2xl text-primary"></i>
+                        </div>
+                        <p class="text-gray-500 text-sm">以下是我的环保承诺</p>
+                    </div>
+                    
+                    <ul id="contract-actions" class="space-y-2 mb-6">
+                        <!-- 动态填充选择的行动 -->
+                    </ul>
+                    
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600 italic text-sm">
+                            "我们不是自然的主人，而是自然的一部分。保护自然，就是保护我们自己。"
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button id="save-contract" class="bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-full transition-all duration-300 text-sm">
+                            <i class="fa fa-download mr-1"></i> 保存契约
+                        </button>
+                        <button id="share-contract" class="bg-primary hover:bg-dark text-white font-medium py-2 px-5 rounded-full transition-all duration-300 text-sm">
+                            <i class="fa fa-share-alt mr-1"></i> 分享给朋友
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-3 text-center text-xs text-gray-500">
+                    生成于 <span id="contract-date"></span>
+                </div>
+            </div>
+            
+            <!-- 结语 - 响应式文本大小 -->
+            <div class="text-center max-w-md mx-auto page">
+                <h3 class="text-xl font-bold mb-5 text-primary">人与自然，和谐共生</h3>
+                <p class="text-gray-600 mb-6 text-sm">
+                    地球是我们共同的家园，保护自然不是一句口号，而是每个人的责任。从今天开始，从小事做起，
+                    让我们一起守护这片土地，为未来留下一片绿水青山。
+                </p>
+                <a href="#hero" class="inline-block bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium py-2 px-6 rounded-full transition-all duration-300 shadow-md text-sm">
+                    重新开始探索 <i class="fa fa-refresh ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 - 移动端堆叠布局 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <h4 class="text-lg font-bold mb-3 flex items-center">
+                        <i class="fa fa-leaf mr-2"></i> 共生之境
+                    </h4>
+                    <p class="text-gray-400 text-sm">
+                        致力于传播人与自然和谐共生的理念，
+                        让更多人了解自然、热爱自然、保护自然。
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-base font-bold mb-3">快速链接</h4>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#gift" class="text-gray-400 hover:text-white transition-colors">自然的馈赠</a></li>
+                        <li><a href="#impact" class="text-gray-400 hover:text-white transition-colors">人类的影响</a></li>
+                        <li><a href="#solutions" class="text-gray-400 hover:text-white transition-colors">共生的答案</a></li>
+                        <li><a href="#action" class="text-gray-400 hover:text-white transition-colors">你的行动</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-base font-bold mb-3">关注我们</h4>
+                    <div class="flex space-x-3 mb-3">
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-weixin text-sm"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-weibo text-sm"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-instagram text-sm"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 text-xs">
+                        数据来源：联合国环境规划署、国家林业和草原局
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-4 text-center text-gray-500 text-xs">
+                © 2023 共生之境 - 人与自然和谐共生. 保留所有权利.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 隐藏加载屏幕
+            setTimeout(function() {
+                const loader = document.getElementById('loader-screen');
+                loader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+                
+                // 显示初始页面元素
+                showPageElements();
+            }, 1500);
+            
+            // 导航栏滚动效果
+            const nav = document.getElementById('main-nav');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    nav.classList.add('bg-white', 'shadow-md');
+                    nav.classList.remove('bg-transparent');
+                    
+                    // 改变导航文字颜色
+                    const navLinks = nav.querySelectorAll('a');
+                    navLinks.forEach(link => {
+                        link.classList.remove('text-white');
+                        link.classList.add('text-primary');
+                    });
+                } else {
+                    nav.classList.remove('bg-white', 'shadow-md');
+                    nav.classList.add('bg-transparent');
+                    
+                    // 恢复导航文字颜色
+                    const navLinks = nav.querySelectorAll('a');
+                    navLinks.forEach(link => {
+                        if (!link.closest('#mobile-menu')) {
+                            link.classList.add('text-white');
+                            link.classList.remove('text-primary');
+                        }
+                    });
+                }
+            });
+            
+            // 移动端菜单
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let menuOpen = false;
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                menuOpen = !menuOpen;
+                if (menuOpen) {
+                    mobileMenu.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+                    mobileMenu.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                    mobileMenuBtn.innerHTML = '<i class="fa fa-times"></i>';
+                } else {
+                    mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+                    mobileMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                    mobileMenuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                }
+            });
+            
+            // 点击移动端菜单链接后自动关闭菜单
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    menuOpen = false;
+                    mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+                    mobileMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                    mobileMenuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                });
+            });
+            
+            // 生态系统切换
+            const ecoBtns = document.querySelectorAll('.eco-btn');
+            const ecoSystems = document.querySelectorAll('.eco-system');
+            
+            ecoBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    ecoBtns.forEach(b => b.classList.remove('active'));
+                    // 给当前按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有生态系统
+                    ecoSystems.forEach(system => system.classList.add('hidden'));
+                    // 显示对应的生态系统
+                    const ecoType = this.getAttribute('data-eco');
+                    document.getElementById(`${ecoType}-eco`).classList.remove('hidden');
+                });
+            });
+            
+            // 生态信息弹窗
+            const interactiveElements = document.querySelectorAll('.interactive[data-info]');
+            const infoModal = document.getElementById('info-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const closeModal = document.getElementById('close-modal');
+            
+            // 生态信息数据
+            const ecoInfo = {
+                butterfly: {
+                    title: "蓝闪蝶",
+                    image: "https://p3-search.byteimg.com/obj/labis/ccf3236c02200c6d7b5e6aad88a571d4",
+                    content: "蓝闪蝶是热带雨林中的传粉高手，它们以花蜜为食，同时帮助植物传播花粉。它们翅膀上的蓝色并非来自色素，而是由翅膀上的微观结构反射光线形成，这种结构还能帮助它们躲避捕食者。"
+                },
+                flower: {
+                    title: "热带雨林兰花",
+                    image: "https://p3-search.byteimg.com/obj/labis/f9515816bb8f66250ca89874576efe54",
+                    content: "这种兰花进化出了与特定传粉者相匹配的形状和颜色。它们会分泌特殊的香气吸引特定种类的昆虫，确保花粉能够准确传递到同类植物上。兰花的种子非常小，能通过风力传播到很远的地方。"
+                },
+                monkey: {
+                    title: "卷尾猴",
+                    image: "https://p3-search.byteimg.com/obj/labis/917ee9d3ec1f4ac54605ad1c27c831fd",
+                    content: "卷尾猴是热带雨林中的重要种子传播者。它们以水果为食，未消化的种子会随着排泄物被带到森林的不同地方，帮助植物扩散。卷尾猴还会使用工具，如用石头砸开坚果，展现出较高的智力水平。"
+                },
+                coral: {
+                    title: "珊瑚礁",
+                    image: "https://p3-search.byteimg.com/obj/labis/d4f04100eab562e76ecda557dfd16c3e",
+                    content: "珊瑚礁是由珊瑚虫的骨骼堆积而成，是海洋中生物多样性最丰富的生态系统之一。珊瑚虫与藻类共生，藻类通过光合作用为珊瑚虫提供能量，而珊瑚虫则为藻类提供栖息地和 nutrients。全球约有5亿人依赖珊瑚礁获得食物和收入。"
+                },
+                fish: {
+                    title: "热带鱼群",
+                    image: "https://p3-search.byteimg.com/obj/labis/a8a51fea9adf21a8a38e72eb5da7e8e5",
+                    content: "这些热带鱼在珊瑚礁生态系统中扮演着重要角色，它们吃藻类，防止藻类过度生长覆盖珊瑚。同时，它们也是大型鱼类的食物来源，维持着海洋食物链的平衡。许多鱼类还会帮助其他鱼类清除寄生虫，形成独特的共生关系。"
+                },
+                bird: {
+                    title: "白鹭",
+                    image: "https://p3-search.byteimg.com/obj/labis/220e3a3cc14adcd4fc35c130d79088c5",
+                    content: "白鹭是湿地生态系统的指示物种，它们的存在表明湿地生态系统健康。白鹭以鱼类和水生昆虫为食，同时也是湿地食物链的重要环节。它们的迁徙路线反映了湿地之间的连接性，对维持区域生物多样性至关重要。"
+                },
+                plant: {
+                    title: "芦苇",
+                    image: "https://p3-search.byteimg.com/obj/labis/a30542e0eaf8c6017a8c9362ca2020a5",
+                    content: "芦苇是湿地生态系统的关键植物，它们的根系能够过滤水中的污染物，净化水质。芦苇丛为许多鸟类和小型哺乳动物提供栖息地和繁殖场所。它们还能减缓水流速度，帮助沉积泥沙，在防洪方面发挥重要作用。"
+                }
+            };
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    const infoKey = this.getAttribute('data-info');
+                    const info = ecoInfo[infoKey];
+                    
+                    if (info) {
+                        modalImage.src = info.image;
+                        modalImage.alt = info.title;
+                        modalTitle.textContent = info.title;
+                        modalContent.textContent = info.content;
+                        
+                        // 显示弹窗
+                        infoModal.classList.remove('opacity-0', 'pointer-events-none');
+                        infoModal.querySelector('div').classList.remove('scale-95');
+                        infoModal.querySelector('div').classList.add('scale-100');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+            
+            closeModal.addEventListener('click', closeInfoModal);
+            
+            infoModal.addEventListener('click', function(e) {
+                if (e.target === infoModal) {
+                    closeInfoModal();
+                }
+            });
+            
+            function closeInfoModal() {
+                infoModal.classList.add('opacity-0', 'pointer-events-none');
+                infoModal.querySelector('div').classList.remove('scale-100');
+                infoModal.querySelector('div').classList.add('scale-95');
+                document.body.style.overflow = '';
+            }
+            
+            // 沙漠变绿洲互动
+            const sapling = document.getElementById('sapling');
+            const desertContainer = document.getElementById('desert-container');
+            const plantZones = document.querySelectorAll('.plant-zone');
+            const desertMessage = document.getElementById('desert-message');
+            const oasisProgress = document.getElementById('oasis-progress');
+            const oasisBar = document.getElementById('oasis-bar');
+            
+            let isDragging = false;
+            let plantedCount = 0;
+            const totalPlants = plantZones.length;
+            
+            // 使树苗可拖动
+            sapling.addEventListener('mousedown', startDrag);
+            sapling.addEventListener('touchstart', startDrag, { passive: true });
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, { passive: true });
+            
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                sapling.classList.add('opacity-80');
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                
+                const desertRect = desertContainer.getBoundingClientRect();
+                let clientX, clientY;
+                
+                if (e.type.includes('mouse')) {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                } else {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+                
+                const x = clientX - desertRect.left - sapling.offsetWidth / 2;
+                const y = clientY - desertRect.top - sapling.offsetHeight / 2;
+                
+                // 限制在容器内
+                const maxX = desertRect.width - sapling.offsetWidth;
+                const maxY = desertRect.height - sapling.offsetHeight;
+                
+                const constrainedX = Math.max(0, Math.min(x, maxX));
+                const constrainedY = Math.max(0, Math.min(y, maxY));
+                
+                sapling.style.left = `${constrainedX}px`;
+                sapling.style.top = `${constrainedY}px`;
+            }
+            
+            function endDrag() {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                sapling.classList.remove('opacity-80');
+                
+                // 检查是否在种植区域
+                const saplingRect = sapling.getBoundingClientRect();
+                
+                plantZones.forEach((zone, index) => {
+                    if (!zone.classList.contains('planted') && isOverlapping(saplingRect, zone.getBoundingClientRect())) {
+                        // 在种植区域内，创建新的植物
+                        const newPlant = document.createElement('div');
+                        newPlant.className = 'absolute w-12 h-16';
+                        newPlant.innerHTML = `<img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/2c9942b2041c4ca58305c9879eeff51e~tplv-a9rns2rl98-image.image?rcl=20250801184814720E2F6FCF4EADAF02F8&amp;rk3s=8e244e95&amp;rrcfp=2609e108&amp;x-expires=1754650098&amp;x-signature=3QVFB8eqzuw2NjPnODz2IVa9jIw%3D" alt="已种植的树" class="w-full h-full object-contain">`;
+                        newPlant.style.left = `${zone.offsetLeft + zone.offsetWidth/2 - 24}px`;
+                        newPlant.style.top = `${zone.offsetTop + zone.offsetHeight/2 - 32}px`;
+                        desertContainer.appendChild(newPlant);
+                        
+                        // 标记该区域已种植
+                        zone.classList.add('planted', 'opacity-0');
+                        
+                        // 更新计数和进度
+                        plantedCount++;
+                        updateOasisProgress();
+                        
+                        // 重置树苗位置
+                        resetSaplingPosition();
+                        
+                        // 显示消息
+                        desertMessage.textContent = `已种植 ${plantedCount}/${totalPlants} 棵树，继续努力！`;
+                        
+                        // 如果全部种完
+                        if (plantedCount === totalPlants) {
+                            setTimeout(() => {
+                                desertMessage.textContent = "太棒了！绿洲正在形成，环境正在改善！";
+                                // 添加背景变化效果
+                                desertContainer.classList.add('bg-green-100');
+                                desertContainer.querySelector('div').classList.add('opacity-30');
+                            }, 500);
+                        }
+                    }
+                });
+                
+                // 如果不在任何种植区域，重置位置
+                if (plantedCount < totalPlants) {
+                    resetSaplingPosition();
+                }
+            }
+            
+            function isOverlapping(rect1, rect2) {
+                return !(
+                    rect1.right < rect2.left ||
+                    rect1.left > rect2.right ||
+                    rect1.bottom < rect2.top ||
+                    rect1.top > rect2.bottom
+                );
+            }
+            
+            function resetSaplingPosition() {
+                sapling.style.left = '25%';
+                sapling.style.top = '50%';
+            }
+            
+            function updateOasisProgress() {
+                const progress = (plantedCount / totalPlants) * 100;
+                oasisProgress.classList.remove('hidden');
+                oasisBar.style.width = `${progress}%`;
+            }
+            
+            // 森林守护模拟游戏
+            const simulationOptions = document.querySelectorAll('.interactive.bg-light');
+            const simulationResult = document.getElementById('simulation-result');
+            const resultImage = document.getElementById('result-image');
+            const resultTitle = document.getElementById('result-title');
+            const resultDescription = document.getElementById('result-description');
+            const resultBiodiversity = document.getElementById('result-biodiversity');
+            const resultCarbon = document.getElementById('result-carbon');
+            const resultEconomy = document.getElementById('result-economy');
+            
+            // 模拟结果数据
+            const simulationData = {
+                '严格禁伐': {
+                    image: 'https://p3-search.byteimg.com/obj/labis/5e904ebc95b275bc754ec96974dc7650',
+                    title: '严格禁伐的结果',
+                    description: '经过10年的严格保护，森林生态系统得到完全恢复，生物多样性显著增加。森林成为了重要的碳汇，但当地社区未能从森林资源中获得经济收益，保护动力不足。',
+                    biodiversity: '高',
+                    carbon: '高',
+                    economy: '低'
+                },
+                '积极种植': {
+                    image: 'https://p3-search.byteimg.com/obj/labis/f7e1fbd4968617297abdc9b897882db8',
+                    title: '积极种植的结果',
+                    description: '通过科学的砍伐与种植计划，森林保持了可持续发展。生物多样性稳定增长，碳储量稳步提升，同时为当地社区提供了稳定的就业和收入来源。',
+                    biodiversity: '中高',
+                    carbon: '中高',
+                    economy: '中高'
+                },
+                '生态旅游': {
+                    image: 'https://p3-search.byteimg.com/obj/labis/d5d765789458411a40f752b2ecebcad4',
+                    title: '生态旅游的结果',
+                    description: '适度的旅游开发带来了可观的经济收入，部分资金用于森林保护。游客的到来对局部生态造成了一定影响，但通过严格管理，整体生态系统保持稳定。',
+                    biodiversity: '中',
+                    carbon: '中',
+                    economy: '高'
+                }
+            };
+            
+            simulationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionText = this.querySelector('h4').textContent;
+                    const data = simulationData[optionText];
+                    
+                    if (data) {
+                        resultImage.src = data.image;
+                        resultImage.alt = data.title;
+                        resultTitle.textContent = data.title;
+                        resultDescription.textContent = data.description;
+                        resultBiodiversity.textContent = data.biodiversity;
+                        resultCarbon.textContent = data.carbon;
+                        resultEconomy.textContent = data.economy;
+                        
+                        // 显示结果
+                        simulationResult.classList.remove('hidden');
+                        
+                        // 平滑滚动到结果
+                        simulationResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                });
+            });
+            
+            // 生成守护契约
+            const generateContract = document.getElementById('generate-contract');
+            const contract = document.getElementById('contract');
+            const contractActions = document.getElementById('contract-actions');
+            const contractDate = document.getElementById('contract-date');
+            const saveContract = document.getElementById('save-contract');
+            const shareContract = document.getElementById('share-contract');
+            
+            generateContract.addEventListener('click', function() {
+                const selectedActions = document.querySelectorAll('.action-option input:checked');
+                
+                if (selectedActions.length === 0) {
+                    alert('请至少选择一项环保行动');
+                    return;
+                }
+                
+                // 清空之前的内容
+                contractActions.innerHTML = '';
+                
+                // 添加选中的行动
+                selectedActions.forEach((action, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start';
+                    li.innerHTML = `
+                        <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5 mr-2 text-xs">${index + 1}</span>
+                        <span class="text-sm">${action.value}</span>
+                    `;
+                    contractActions.appendChild(li);
+                });
+                
+                // 设置日期
+                const date = new Date();
+                contractDate.textContent = date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // 显示契约
+                contract.classList.remove('hidden');
+                
+                // 平滑滚动到契约
+                contract.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            // 保存契约
+            saveContract.addEventListener('click', function() {
+                alert('契约已保存到您的账户中，继续践行您的环保承诺吧！');
+            });
+            
+            // 分享契约
+            shareContract.addEventListener('click', function() {
+                alert('分享链接已复制到剪贴板，邀请朋友一起加入环保行动！');
+            });
+            
+            // 进度条更新
+            window.addEventListener('scroll', updateProgressBar);
+            
+            function updateProgressBar() {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById("progress-bar").style.width = scrolled + "%";
+            }
+            
+            // 图表初始化 - 响应式调整
+            const ctx = document.getElementById('eco-chart').getContext('2d');
+            const ecoChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1970', '1980', '1990', '2000', '2010', '2020'],
+                    datasets: [
+                        {
+                            label: '全球森林覆盖率 (%)',
+                            data: [31.2, 30.8, 30.3, 29.8, 29.4, 29.1],
+                            borderColor: '#2E7D32',
+                            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: '二氧化碳浓度 (ppm)',
+                            data: [325, 338, 354, 369, 390, 414],
+                            borderColor: '#E53935',
+                            backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: '濒危物种数量',
+                            data: [500, 850, 1200, 1800, 2300, 3079],
+                            borderColor: '#FF9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'y2'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '森林覆盖率 (%)'
+                            },
+                            min: 25,
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'CO₂浓度 (ppm)'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            min: 300,
+                        },
+                        y2: {
+                            type: 'linear',
+                            display: false,
+                            position: 'right',
+                        }
+                    },
+                    // 移动端图表字体调整
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        tooltip: {
+                            titleFont: {
+                                size: 12
+                            },
+                            bodyFont: {
+                                size: 11
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            title: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        y1: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            title: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 页面元素显示动画 - 考虑移动端性能
+            function showPageElements() {
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1
+                };
+                
+                // 检测是否为移动设备，调整阈值提高性能
+                if (window.innerWidth < 768) {
+                    observerOptions.threshold = 0.2;
+                }
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+                
+                // 观察所有带page类的元素
+                document.querySelectorAll('.page').forEach(page => {
+                    observer.observe(page);
+                });
+            }
+            
+            // 窗口大小变化时重新布局
+            window.addEventListener('resize', function() {
+                // 重置图表大小
+                if (typeof ecoChart !== 'undefined') {
+                    ecoChart.resize();
+                }
+                
+                // 重置种植的树位置（如果有）
+                if (plantedCount > 0) {
+                    const plants = desertContainer.querySelectorAll('div:not(.plant-zone):not(#sapling)');
+                    plants.forEach((plant, index) => {
+                        const zone = Array.from(plantZones).find(z => z.classList.contains('planted'));
+                        if (zone) {
+                            plant.style.left = `${zone.offsetLeft + zone.offsetWidth/2 - 24}px`;
+                            plant.style.top = `${zone.offsetTop + zone.offsetHeight/2 - 32}px`;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    </body></html>
